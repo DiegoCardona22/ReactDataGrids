@@ -42,11 +42,11 @@ const ReactDataGridComponent = () => {
     setCollapsedRows(collapsedRows);
   }, [])
 
-  const handleResize = () => {
+  const handleResize = useCallback(() => {
     if (gridRef) {
       gridRef.current.setColumnSizesToFit();
     }
-  };
+  }, [gridRef]);
 
   useLayoutEffect(() => {
     setTimeout(() => {
