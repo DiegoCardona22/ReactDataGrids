@@ -90,7 +90,6 @@ const ReactDataGridComponent = () => {
         sortInfo={sortInfo}
         showColumnMenuTool={true}
         style={gridStyle}
-        licenseKey='AppName=TeamClassApp,Company=TeamClass,ExpiryDate=2023-01-27,LicenseDeveloperCount=1,LicenseType=single_app,Ref=TeamClassLicenseRef,Z=-328866592631084255-1143394258-209424138521009584341397906949'
       />
     </Fragment>
   )
