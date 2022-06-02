@@ -1,50 +1,57 @@
 // @packages
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-
-// @scripts
-import FullWidthCellRenderer from './fullWidthCellRenderer.jsx';
 
 // @styles
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const AgGridComponent = () => {
-  const [rowData] = useState([
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Porsche', model: 'Boxter', price: 72000 },
-  ]);
-
+  const [rowData, setRowData] = useState();
   const [columnDefs] = useState([
-    { field: 'make' },
-    { field: 'model' },
-    { field: 'price' },
+    { field: 'athlete', rowDrag: true },
+    { field: 'country' },
+    { field: 'year', width: 100 },
+    { field: 'date' },
+    { field: 'sport' },
+    { field: 'gold' },
+    { field: 'silver' },
+    { field: 'bronze' },
   ]);
 
-  const isFullWidth = (data) => {
-    return ['Peru', 'France', 'Italy'].indexOf(data.name) >= 0;
-  };
+  const onGridReady = useCallback((params) => {
+    fetch('https://www.ag-grid.com/example-assets/olympic-winners.json')
+      .then((resp) => resp.json())
+      .then((data) => setRowData(data));
+  }, []);
 
   const defaultColDef = useMemo(() => {
     return {
-      width: 150,
+      width: 200,
       sortable: true,
       resizable: true,
       filter: true,
     };
   }, []);
 
-  const getRowHeight = useCallback((params) => {
-    return params.data.rowHeight;
-  }, []);
-
-  const isFullWidthRow = useCallback((params) => {
-    return isFullWidth(params.rowNode.data);
-  }, []);
-
-  const fullWidthCellRenderer = useMemo(() => {
-    return FullWidthCellRenderer;
+  const autoGroupColumnDef = useMemo(() => {
+    return {
+      headerName: 'Group',
+      minWidth: 170,
+      field: 'athlete',
+      valueGetter: (params) => {
+        if (params.node.group) {
+          return params.node.key;
+        } else {
+          return params.data[params.colDef.field];
+        }
+      },
+      headerCheckboxSelection: true,
+      cellRenderer: 'agGroupCellRenderer',
+      cellRendererParams: {
+        checkbox: true,
+      },
+    };
   }, []);
 
   return (
@@ -53,12 +60,18 @@ const AgGridComponent = () => {
       <br />
       <div className="ag-theme-alpine" style={{ height: 400, width: 1000 }}>
         <AgGridReact 
-          rowData={rowData} 
+          rowData={rowData}
           columnDefs={columnDefs}
-          isFullWidthRow={isFullWidthRow}
-          fullWidthCellRenderer={fullWidthCellRenderer}
+          autoGroupColumnDef={autoGroupColumnDef}
           defaultColDef={defaultColDef}
-          getRowHeight={getRowHeight}
+          suppressRowClickSelection={true}
+          groupSelectsChildren={true}
+          rowSelection={'multiple'}
+          rowGroupPanelShow={'always'}
+          pivotPanelShow={'always'}
+          enableRangeSelection={true}
+          pagination={true}
+          onGridReady={onGridReady}
         >
         </AgGridReact>
       </div>
