@@ -1,24 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+// @scrips
+import ReactDataGridExample from "../src/components/ReactDataGrid";
+import KendoDataGridExample from "../src/components/Kendo";
+import AgGridComponent from "../src/components/AgGrid";
 
-function App() {
+// @styles
+import '@progress/kendo-theme-default/dist/all.css';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <KendoDataGridExample />
+      <br />
+      <ReactDataGridExample />
+      <br />
+      <AgGridComponent />
+    </>
   );
 }
 
